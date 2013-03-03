@@ -1,0 +1,3032 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="Asciidoctor 0.1.1">
+    
+    
+    <title>Using Cucumber to Build Console Applications Test-First</title>
+    
+    
+    
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.min.css">
+     <link rel="stylesheet" href="css/theme/vg_simple.css" id="theme">
+    
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+      document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+    </script>
+  </head>
+  <body class="article">
+    
+    <div id="header">
+      
+      
+    </div>
+    
+      <!-- RevealJS -->
+    <div class="reveal">
+      <div class="slides">
+
+<section>
+
+  
+  <h2 id="_using_cucumber_to_build_console_applications_test_first">Using Cucumber to Build Console Applications Test-First</h2>
+  
+
+  
+<div class="paragraph">
+    
+  <p><span class="image">
+  <img src="assets/images/iStock_000012998893Large.jpg" alt="Cucumber">
+</span></p>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h2 id="_paul_rayner">Paul Rayner</h2>
+  
+
+  
+<div class="paragraph">
+    
+  <p>Twitter: @thepaulrayner</p>
+</div>
+<div class="paragraph">
+    
+  <p>Email: paul@virtualgenius.com</p>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  
+
+  
+<div class="paragraph">
+    
+  <p><span class="image">
+  <img src="assets/images/vg_logo_square.png" alt="Company Logo">
+</span></p>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h2 id="_our_goal">Our Goal</h2>
+  
+
+  
+<div class="paragraph">
+    
+  <p>Create a simple Ruby command line utility for changing the extension for a set
+of files in a specified folder</p>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h2 id="_pair_exercise">Pair Exercise</h2>
+  
+
+  
+<div class="paragraph">
+    
+  <p>Come up with a realistic example of how our rename program should work</p>
+</div>
+
+  
+</section>
+
+
+<section>
+   <section>
+  
+  <h2 id="_specification_by_example">Specification by Example</h2>
+  
+   </section>
+  
+
+<section>
+
+  
+  <h3 id="_why_examples">Why Examples?</h3>
+  
+
+  
+<div class="ulist source incremental">
+  
+  <ul>
+  
+    <li class=fragment>
+      <p>Focus on understanding the business domain</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Improve collaboration with non-technical people</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Become tests</p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  
+
+  
+<div class="paragraph">
+    
+  <p><span class="image">
+  <img src="assets/images/examples.png" alt="Examples">
+</span></p>
+</div>
+<div class="paragraph small">
+    
+  <p>From <em>Bridging the Communication Gap: Specification by Example and Agile Acceptance Testing</em> by Gojko Adzic</p>
+</div>
+
+  
+</section>
+
+
+  
+</section>
+
+
+<section>
+   <section>
+  
+  <h2 id="_exploring_scenarios">Exploring Scenarios</h2>
+  
+   </section>
+  
+
+<section>
+
+  
+  <h3 id="_first_example">First Example</h3>
+  
+
+  
+<div class="paragraph">
+    
+  <p>Replace every file in a folder that ends with the extension <code>jpeg</code> with the
+new extension <code>jpg</code></p>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_be_concrete">Be Concrete</h3>
+  
+
+  
+<div class="ulist source incremental">
+  
+  <ul>
+  
+    <li class=fragment>
+      <p>Folder name: <code>photos</code></p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Existing extension: <code>jpeg</code></p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>New extension: <code>jpg</code></p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_no_even_em_more_em_concrete">No, Even <em>More</em> Concrete!</h3>
+  
+
+  
+<div class="paragraph">
+    
+  <p>If the following files are in the <code>photos</code> folder:</p>
+</div>
+<div class="ulist source">
+  
+  <ul>
+  
+    <li >
+      <p><code>a.jpeg</code></p>
+      
+    </li>
+  
+    <li >
+      <p><code>b.jpeg</code></p>
+      
+    </li>
+  
+    <li >
+      <p><code>c.jpeg</code></p>
+      
+    </li>
+  
+  </ul>
+</div>
+<div class="paragraph">
+    
+  <p>Then after the <code>bulkrename</code> command runs we should see these three files
+renamed to:</p>
+</div>
+<div class="ulist source">
+  
+  <ul>
+  
+    <li >
+      <p><code>a.jpg</code></p>
+      
+    </li>
+  
+    <li >
+      <p><code>b.jpg</code></p>
+      
+    </li>
+  
+    <li >
+      <p><code>c.jpg</code></p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_another_example">Another Example</h3>
+  
+
+  
+<div class="paragraph">
+    
+  <p>Update the extension to <code>md</code> for Markdown text files with
+<code>TXT</code> and <code>txt</code> extensions</p>
+</div>
+
+  
+</section>
+
+
+  
+</section>
+
+
+<section>
+   <section>
+  
+  <h2 id="_what_about_the_future">What About the Future?</h2>
+  
+   </section>
+  
+
+<section>
+
+  
+  <h3 id="__possible_future_scenarios">(Possible) Future Scenarios</h3>
+  
+
+  
+<div class="ulist source incremental">
+  
+  <ul>
+  
+    <li class=fragment>
+      <p>Will need to handle more sophisticated file renaming schemes and options</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p><em>Since we will need these capabilities, shouldn&#8217;t we build them now?</em></p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_no_don_t_get_distracted">NO! Don&#8217;t Get Distracted!</h3>
+  
+
+  
+<div class="paragraph">
+    
+  <p>Focus for now on the simple case: renaming extensions</p>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_cli_usage">CLI Usage</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>    bulkrename photos jpeg jpg</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+  
+</section>
+
+
+<section>
+   <section>
+  
+  <h2 id="_good_clis">Good CLIs</h2>
+  
+   </section>
+  
+
+<section>
+
+  
+  <h3 id="_characteristics">Characteristics</h3>
+  
+
+  
+<div class="olist arabic incremental">
+  
+  <ol class="arabic">
+  
+    <li class=fragment>
+      <p>Have a clear and concise purpose</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Are easy to use</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Are helpful</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Play well with others</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Delight casual users</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Make configuration easy</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Distribute painlessly</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Are easy to maintain</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Are well tested</p>
+      
+    </li>
+  
+  </ol>
+</div>
+<div class="paragraph fragment">
+    
+  <p>From <em>Build Awesome Command-Line Applications in Ruby: Control Your Computer, Simplify Your Life</em> by David Bryant Copeland</p>
+</div>
+
+  
+</section>
+
+
+  
+</section>
+
+
+<section>
+   <section>
+  
+  <h2 id="_cucumber">Cucumber</h2>
+  
+   </section>
+  
+
+<section>
+
+  
+  
+
+  
+<div class="paragraph">
+    
+  <p><span class="image">
+  <img src="assets/images/iStock_000012998893Large.jpg" alt="Cucumber">
+</span></p>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_how_it_works">How it Works</h3>
+  
+
+  
+<div class="paragraph">
+    
+  <p><code>TODO: Diagram of Cucumber assets: feature file and step def files</code></p>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_feature_file">Feature File</h3>
+  
+
+  
+<div class="paragraph">
+    
+  <p>Create <code>features/bulkrename.feature</code></p>
+</div>
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>Feature: Bulk Rename Command Line Utility
+  In order to perform bulk renames of files
+  As a newcomer to Cucumber
+  I want to be able to rename multiple files in a folder by file extension
+
+  Scenario: Rename files in specified folder by extension
+   Given an empty file named "photos/a.jpeg"
+   And an empty file named "photos/b.jpeg"
+   And an empty file named "photos/c.jpeg"
+   When I run `bulkrename photos jpeg jpg`
+   Then the following files should exist:
+    | photos/a.jpg |
+    | photos/b.jpg |
+    | photos/c.jpg |</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_run_cucumber">Run Cucumber</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>cucumber features/bulkrename.feature</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_run_cucumber_2">Run Cucumber</h3>
+  
+
+  
+<div class="paragraph">
+    
+  <p>Cucumber (correctly) reports that none of the steps are yet implemented as
+step definitions yet</p>
+</div>
+
+  
+</section>
+
+
+  
+</section>
+
+
+<section>
+   <section>
+  
+  <h2 id="_aruba">Aruba</h2>
+  
+   </section>
+  
+
+<section>
+
+  
+  <h3 id="_what_is_aruba">What is Aruba?</h3>
+  
+
+  
+<div class="ulist source incremental">
+  
+  <ul>
+  
+    <li class=fragment>
+      <p>Ruby gem that enables you to use Cucumber to test-drive CLIs.</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Provides a set of predefined step definitions to use in our scenarios.</p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_installing_aruba">Installing Aruba</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>gem install aruba</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_add_aruba_library">Add Aruba Library</h3>
+  
+
+  
+<div class="paragraph">
+    
+  <p>Add to <code>env.rb</code>:</p>
+</div>
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>require 'aruba/cucumber'</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_using_aruba">Using Aruba</h3>
+  
+
+  
+<aside class="notes">
+  <table>
+    <tr>
+      <td class="icon">
+        
+        <div class="title">Note</div>
+        
+      </td>
+      <td class="content">
+        
+        <div class="paragraph">
+    
+  <p>Run <code>cucumber features/bulkrename.feature</code> again, steps are now defined:</p>
+</div>
+
+      </td>
+    </tr>
+  </table>
+</aside>
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>Feature: Bulk Rename Command Line Utility
+  In order to perform bulk renames of files
+  As a newcomer to Cucumber
+  I want to be able to rename multiple files in a folder by file extension
+
+  Scenario: Rename files in specified folder by extension # features/bulkrename.feature:6
+    Given an empty file named "photos/a.jpeg"             # aruba-0.5.1/lib/aruba/cucumber.rb:27
+    And an empty file named "photos/b.jpeg"               # aruba-0.5.1/lib/aruba/cucumber.rb:27
+    And an empty file named "photos/c.jpeg"               # aruba-0.5.1/lib/aruba/cucumber.rb:27</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_using_aruba_continued">Using Aruba (continued)</h3>
+  
+
+  
+<aside class="notes">
+  <table>
+    <tr>
+      <td class="icon">
+        
+        <div class="title">Note</div>
+        
+      </td>
+      <td class="content">
+        
+        <div class="paragraph">
+    
+  <p>Run <code>cucumber features/bulkrename.feature</code> again, steps are now defined:</p>
+</div>
+
+      </td>
+    </tr>
+  </table>
+</aside>
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>    When I run `bulkrename photos jpeg jpg`               # aruba-0.5.1/lib/aruba/cucumber.rb:60
+      No such file or directory - bulkrename (Aruba::LaunchError)
+      features/bulkrename.feature:10:in `When I run `bulkrename photos jpeg jpg`'
+    Then the following files should exist:                # aruba-0.5.1/lib/aruba/cucumber.rb:256
+      | photos/a.jpg |
+      | photos/b.jpg |
+      | photos/c.jpg |
+
+Failing Scenarios:
+cucumber features/bulkrename.feature:6 # Scenario: Rename files in specified folder by extension
+
+1 scenario (1 failed)
+5 steps (1 failed, 1 skipped, 3 passed)
+0m0.050s</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+  
+</section>
+
+
+<section>
+   <section>
+  
+  <h2 id="_our_new_script">Our New Script</h2>
+  
+   </section>
+  
+
+<section>
+
+  
+  <h3 id="_create_bulkrename">Create Bulkrename</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>#!/usr/bin/env ruby
+$: &lt;&lt; File.expand_path("../lib/", __FILE__)</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_make_it_executable">Make it Executable</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>`chmod +x bulkrename`</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_aruba_looks_for_scripts_in_code_bin_code">Aruba looks for scripts in <code>./bin</code></h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>mkdir bin
+mv bulkrename bin/</code></pre>
+    
+  </div>
+</div>
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>cucumber features/bulkrename.feature</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+  
+</section>
+
+
+<section>
+   <section>
+  
+  <h2 id="_run_it">Run it</h2>
+  
+   </section>
+  
+
+<section>
+
+  
+  <h3 id="_scenario_fails">Scenario Fails</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>Feature: Bulk Rename Command Line Utility
+  In order to perform bulk renames of files
+  As a newcomer to Cucumber
+  I want to be able to rename multiple files in a folder by file extension
+
+  Scenario: Rename files in specified folder by extension # features/bulkrename.feature:6
+    Given an empty file named "photos/a.jpeg"             # aruba-0.5.1/lib/aruba/cucumber.rb:27
+    And an empty file named "photos/b.jpeg"               # aruba-0.5.1/lib/aruba/cucumber.rb:27
+    And an empty file named "photos/c.jpeg"               # aruba-0.5.1/lib/aruba/cucumber.rb:27
+    When I run `bulkrename photos jpeg jpg`               # aruba-0.5.1/lib/aruba/cucumber.rb:60</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_scenario_fails_continued">Scenario Fails (Continued)</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>    Then the following files should exist:                # aruba-0.5.1/lib/aruba/cucumber.rb:256
+      | photos/a.jpg |
+      | photos/b.jpg |
+      | photos/c.jpg |
+      expected file?("photos/a.jpg") to return true, got false (RSpec::Expectations::ExpectationNotMetError)
+      features/bulkrename.feature:11:in `Then the following files should exist:'
+
+Failing Scenarios:
+cucumber features/bulkrename.feature:6 # Scenario: Rename files in specified folder by extension
+
+1 scenario (1 failed)
+5 steps (1 failed, 4 passed)
+0m0.327s</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+  
+</section>
+
+
+<section>
+   <section>
+  
+  <h2 id="_minimalist_implementation">Minimalist implementation</h2>
+  
+   </section>
+  
+
+<section>
+
+  
+  <h3 id="_how_minimalist">How Minimalist?</h3>
+  
+
+  
+<div class="ulist source incremental">
+  
+  <ul>
+  
+    <li class=fragment>
+      <p>Hard code the command arguments for now. Yes, <em>hard code</em> them!</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Refactor later to pull folder name, file extension and replacement file
+extension from the arguments (once we are sure the rename is working correctly)</p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_update_bulkrename">Update Bulkrename</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>#!/usr/bin/env ruby
+$: &lt;&lt; File.expand_path("../lib/", __FILE__)
+
+Dir.foreach("photos") do |file_name|
+ type = File.extname(file_name).gsub(/^\./, '')
+ if type == "jpeg"
+   old_name = "photos/" + file_name
+   new_name = "photos/" + File.basename(file_name, ".#{type}") + ".jpg"
+   File.rename(old_name, new_name)
+ end
+end</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_success">Success!</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>Feature: Bulk Rename Command Line Utility
+  In order to perform bulk renames of files
+  As a newcomer to Cucumber
+  I want to be able to rename multiple files in a folder by file extension
+
+  Scenario: Rename files in specified folder by extension # features/bulkrename.feature:6
+    Given an empty file named "photos/a.jpeg"             # aruba-0.5.1/lib/aruba/cucumber.rb:27
+    And an empty file named "photos/b.jpeg"               # aruba-0.5.1/lib/aruba/cucumber.rb:27
+    And an empty file named "photos/c.jpeg"               # aruba-0.5.1/lib/aruba/cucumber.rb:27</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_success_continued">Success! (Continued)</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>    When I run `bulkrename photos jpeg jpg`               # aruba-0.5.1/lib/aruba/cucumber.rb:60
+    Then the following files should exist:                # aruba-0.5.1/lib/aruba/cucumber.rb:256
+      | photos/a.jpg |
+      | photos/b.jpg |
+      | photos/c.jpg |
+
+1 scenario (1 passed)
+5 steps (5 passed)
+0m0.331s</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+  
+</section>
+
+
+<section>
+   <section>
+  
+  <h2 id="_next_scenario">Next Scenario</h2>
+  
+   </section>
+  
+
+<section>
+
+  
+  <h3 id="_examples_so_far">Examples So Far</h3>
+  
+
+  
+<div class="olist arabic incremental">
+  
+  <ol class="arabic">
+  
+    <li class=fragment>
+      <p>Replace every file in <code>photos</code> folder that ends with the extension <code>jpeg</code> with the
+new extension <code>jpg</code></p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p><em>Handling Markdown files in <code>textfiles</code> folder</em> &#8592;</p>
+      
+    </li>
+  
+  </ol>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_scenario">Scenario</h3>
+  
+
+  
+<div class="ulist source">
+  
+  <ul>
+  
+    <li >
+      <p>Handling Markdown files in <code>textfiles</code> folder</p>
+      
+<div class="ulist source">
+  
+  <ul>
+  
+    <li >
+      <p><code>txt</code> to <code>md</code></p>
+      
+    </li>
+  
+    <li >
+      <p><code>textfiles</code> folder</p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_add_to_feature_file">Add to Feature File</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>  Scenario: Rename files in specified folder with extension to completely new file type
+    Given an empty file named "textfiles/doc1.txt"
+    And an empty file named "textfiles/doc2.txt"
+    And an empty file named "textfiles/doc3.txt"
+    When I run `bulkrename textfiles txt md`
+    Then the following files should exist:
+    | textfiles/doc1.md |
+    | textfiles/doc2.md |
+    | textfiles/doc3.md |
+</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_test_fails">Test Fails</h3>
+  
+
+  
+<div class="paragraph">
+    
+  <p>Expected&#8230;now let&#8217;s implement!</p>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_refactor_remove_hardcoding">Refactor: Remove hardcoding</h3>
+  
+
+  
+<div class="ulist source incremental">
+  
+  <ul>
+  
+    <li class=fragment>
+      <p>Extract <code>folder,</code> <code>find_type</code> and <code>replace_type</code> values from the three arguments to the <code>bulkrename</code> command.</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Check whether the file extension is the same as <code>find_type</code> for each file in the specified <code>folder</code></p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>If it is, rename it with the <code>replace_type</code> extension.</p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_refactor">Refactor</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>#!/usr/bin/env ruby
+$: &lt;&lt; File.expand_path("../lib/", __FILE__)
+
+folder = ARGV[0]
+find_type = ARGV[1]
+replace_type = ARGV[2]
+
+Dir.foreach(folder) do |file_name|
+ type = File.extname(file_name).gsub(/^\./, '')
+ if type == find_type
+   old_name = folder + "/" + file_name
+   new_name = folder + "/" + File.basename(file_name, ".#{type}") + "." + replace_type
+   File.rename(old_name, new_name)
+ end
+end</code></pre>
+    
+  </div>
+</div>
+<aside class="notes">
+  <table>
+    <tr>
+      <td class="icon">
+        
+        <div class="title">Note</div>
+        
+      </td>
+      <td class="content">
+        
+        <div class="paragraph">
+    
+  <p>Rerun Cucumber
+Both the first scenario and the new markdown files scenario now pass</p>
+</div>
+
+      </td>
+    </tr>
+  </table>
+</aside>
+
+  
+</section>
+
+
+  
+</section>
+
+
+<section>
+   <section>
+  
+  <h2 id="_next_example">Next Example</h2>
+  
+   </section>
+  
+
+<section>
+
+  
+  <h3 id="_examples_so_far_2">Examples So Far</h3>
+  
+
+  
+<div class="olist arabic incremental">
+  
+  <ol class="arabic">
+  
+    <li class=fragment>
+      <p>Replace every file in <code>photos</code> folder that ends with the extension <code>jpeg</code> with the
+new extension <code>jpg</code></p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Handling Markdown files in <code>textfiles</code> folder</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p><em>Case-insensitive replacement</em> &#8592;</p>
+      
+    </li>
+  
+  </ol>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_ignoring_case">Ignoring Case</h3>
+  
+
+  
+<div class="paragraph">
+    
+  <p>Replacing <code>TXT</code> and <code>txt</code> with <code>csv</code> in a manner that ignores case</p>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_add_to_feature_file_2">Add to Feature file</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>  Scenario: Rename files in specified folder by extension ignoring case
+    Given an empty file named "textfiles/May-financials.txt"
+    And an empty file named "textfiles/June-financials.TXT"
+    And an empty file named "textfiles/July-financials.TXT"
+    When I run `bulkrename textfiles txt csv`
+    Then the following files should exist:
+    | textfiles/May-financials.csv |
+    | textfiles/June-financials.csv |
+    | textfiles/July-financials.csv |</code></pre>
+    
+  </div>
+</div>
+<aside class="notes">
+  <table>
+    <tr>
+      <td class="icon">
+        
+        <div class="title">Note</div>
+        
+      </td>
+      <td class="content">
+        
+        <div class="paragraph">
+    
+  <p>When you run Cucumber now you will see that <code>June-financials.TXT</code> causes
+this new scenario to fail. Let&#8217;s refactor our script to ignore the case
+of the file extensions:</p>
+</div>
+
+      </td>
+    </tr>
+  </table>
+</aside>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_ignore_case_of_file_extensions">Ignore Case of File Extensions</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>#!/usr/bin/env ruby
+$: &lt;&lt; File.expand_path("../lib/", __FILE__)
+
+folder = ARGV[0]
+find_type = ARGV[1]
+replace_type = ARGV[2]
+
+Dir.foreach(folder) do |file_name|
+ type = File.extname(file_name).gsub(/^\./, '')
+ if type.downcase == find_type.downcase
+   old_name = "#{folder}/" + file_name
+   new_name = "#{folder}/" + File.basename(file_name, ".#{type}") + ".#{replace_type}"
+   File.rename(old_name, new_name)
+ end
+end</code></pre>
+    
+  </div>
+</div>
+<aside class="notes">
+  <table>
+    <tr>
+      <td class="icon">
+        
+        <div class="title">Note</div>
+        
+      </td>
+      <td class="content">
+        
+        <div class="paragraph">
+    
+  <p>Now the first three scenarios pass, and while we still have other things
+to implement, we have the makings of a robust, easy to use bulk rename
+script.</p>
+</div>
+
+      </td>
+    </tr>
+  </table>
+</aside>
+
+  
+</section>
+
+
+  
+</section>
+
+
+<section>
+   <section>
+  
+  <h2 id="_adding_new_scenarios_and_refactoring">Adding New Scenarios and Refactoring</h2>
+  
+   </section>
+  
+
+<section>
+
+  
+  <h3 id="_examples_so_far_3">Examples So Far</h3>
+  
+
+  
+<div class="olist arabic incremental">
+  
+  <ol class="arabic">
+  
+    <li class=fragment>
+      <p>Replace every file in <code>photos</code> folder that ends with the extension <code>jpeg</code> with the
+new extension <code>jpg</code></p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Handling Markdown files in <code>textfiles</code> folder</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Case-insensitive replacement</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p><em>Handle default command output</em> &#8592;</p>
+      
+    </li>
+  
+  </ol>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_default_command_output">Default Command Output</h3>
+  
+
+  
+<div class="paragraph">
+    
+  <p>Ensure is helpful when no arguments are specified:</p>
+</div>
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>  @wip
+  Scenario: Default script output is correct
+    When I run `bulkrename`
+    Then the exit status should be 0
+    And the output should contain:
+    """
+    USAGE: bulkrename &lt;folder name&gt; &lt;find extension&gt; &lt;replace extension&gt;
+    """</code></pre>
+    
+  </div>
+</div>
+<aside class="notes">
+  <table>
+    <tr>
+      <td class="icon">
+        
+        <div class="title">Note</div>
+        
+      </td>
+      <td class="content">
+        
+        <div class="paragraph">
+    
+  <p>Notice that we&#8217;ve tagged it with <code>@wip</code> so we can opt to selectively run only
+this scenario using the <code>--tags</code> command-line option:</p>
+</div>
+
+      </td>
+    </tr>
+  </table>
+</aside>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_using_tags">Using Tags</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>cucumber --tags @wip features/bulkrename.feature</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_make_it_pass">Make it Pass</h3>
+  
+
+  
+<div class="paragraph">
+    
+  <p>Add to <code>bulkrename</code> before we pull the values out of the arguments:</p>
+</div>
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>if ARGV.size == 0 then
+  puts 'USAGE: bulkrename &lt;folder name&gt; &lt;find extension&gt; &lt;replace extension&gt;'
+  exit 0
+end</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+  
+</section>
+
+
+<section>
+   <section>
+  
+  <h2 id="_new_example">New Example</h2>
+  
+   </section>
+  
+
+<section>
+
+  
+  <h3 id="_examples_so_far_4">Examples So Far</h3>
+  
+
+  
+<div class="olist arabic incremental">
+  
+  <ol class="arabic">
+  
+    <li class=fragment>
+      <p>Replace every file in <code>photos</code> folder that ends with the extension <code>jpeg</code> with the
+new extension <code>jpg</code></p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Handling Markdown files in <code>textfiles</code> folder</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Case-insensitive replacement</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Handle default command output</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p><em>Don&#8217;t overwrite files</em> &#8592;</p>
+      
+    </li>
+  
+  </ol>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_new_scenario">New Scenario</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>  @wip
+  Scenario: Do not overwrite existing file(s)
+    Given an empty file named "photos/d.jpeg"
+    And an empty file named "photos/d.jpg"
+    When I run `bulkrename photos jpeg jpg`
+    Then the following files should exist:
+      | photos/d.jpeg |
+      | photos/d.jpg  |</code></pre>
+    
+  </div>
+</div>
+<aside class="notes">
+  <table>
+    <tr>
+      <td class="icon">
+        
+        <div class="title">Note</div>
+        
+      </td>
+      <td class="content">
+        
+        <div class="paragraph">
+    
+  <p>It would also be prudent to ensure that our <code>bulkrename</code> script is not going
+to overwrite a file if it already exists, so let&#8217;s create a new <code>@wip</code>
+scenario for that (don’t forget to remove the <code>@wip</code> tag from the previous
+scenario):</p>
+</div>
+
+      </td>
+    </tr>
+  </table>
+</aside>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_update_bulkrename_2">Update Bulkrename</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>   if not File.exists?(new_name)
+     File.rename(old_name, new_name)
+   end</code></pre>
+    
+  </div>
+</div>
+<aside class="notes">
+  <table>
+    <tr>
+      <td class="icon">
+        
+        <div class="title">Note</div>
+        
+      </td>
+      <td class="content">
+        
+        <div class="paragraph">
+    
+  <p>Running Cucumber again will show that this fails, so let&#8217;s update the script
+to make it pass by wrapping the <code>File.rename</code> operation in a conditional:</p>
+</div>
+<div class="paragraph">
+    
+  <p>Now when we run Cucumber the "Do not overwrite existing file(s)"
+scenario passes, so we can be confident that our script behaves well in
+the event that a file already exists.</p>
+</div>
+
+      </td>
+    </tr>
+  </table>
+</aside>
+
+  
+</section>
+
+
+  
+</section>
+
+
+<section>
+   <section>
+  
+  <h2 id="_never_overwrite_a_file">Never Overwrite a File?</h2>
+  
+   </section>
+  
+
+<section>
+
+  
+  <h3 id="_examples_so_far_5">Examples So Far</h3>
+  
+
+  
+<div class="olist arabic incremental">
+  
+  <ol class="arabic">
+  
+    <li class=fragment>
+      <p>Replace every file in <code>photos</code> folder that ends with the extension <code>jpeg</code> with the
+new extension <code>jpg</code></p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Handling Markdown files in <code>textfiles</code> folder</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Case-insensitive replacement</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Handle default command output</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Don&#8217;t overwrite files</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p><em>Prompt to overwrite files</em> &#8592;</p>
+      
+    </li>
+  
+  </ol>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_add_new_switch">Add New Switch</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>  @wip
+  Scenario: Detect an existing file
+    Given an empty file named "photos/d.jpeg"
+    And an empty file named "photos/d.jpg"
+    When I run `bulkrename photos jpeg jpg --askoverwrite`
+    Then the output should contain:
+    """
+    File 'photos/d.jpg' already exists, do you want to overwrite it (y/n)?
+    """</code></pre>
+    
+  </div>
+</div>
+<aside class="notes">
+  <table>
+    <tr>
+      <td class="icon">
+        
+        <div class="title">Note</div>
+        
+      </td>
+      <td class="content">
+        
+        <div class="paragraph">
+    
+  <p>What if we do want to overwrite certain files on occasion? It would be good to
+be able to handle gracefully the situation when a file we want to rename
+already exists by prompting the user to overwrite the existing file or not.
+Let’s do this by adding a switch to <code>bulkrename</code> which will cause an existing
+file to be overwritten when the user indicates that she wants this to happen,
+and doing the default behavour otherwise.</p>
+</div>
+
+      </td>
+    </tr>
+  </table>
+</aside>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_check_for_overwrites">Check for Overwrites</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>    if File.exists?(new_name) &amp;&amp; ARGV[3] == "--askoverwrite"
+      print "File '#{new_name}' already exists, do you want to overwrite it (y/n)?"
+    end
+   if not File.exists?(new_name)
+     File.rename(old_name, new_name)
+   end</code></pre>
+    
+  </div>
+</div>
+<aside class="notes">
+  <table>
+    <tr>
+      <td class="icon">
+        
+        <div class="title">Note</div>
+        
+      </td>
+      <td class="content">
+        
+        <div class="paragraph">
+    
+  <p>Now when we run Cucumber this "Detect an existing file" scenario passes.
+Clearly this is not all that we want to do yet. But don&#8217;t be
+disappointed, implementing this incomplete scenario still constitutes
+making important progress. We&#8217;ve verified several significant
+intermediate things that get us much closer to our goal: that we can
+parse the new switch, detect the existing file, and display the
+appropriate message.</p>
+</div>
+
+      </td>
+    </tr>
+  </table>
+</aside>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_interactive_aruba">Interactive Aruba</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>  Scenario: Choose to overwrite an existing file
+    Given an empty file named "photos/d.jpeg"
+      And an empty file named "photos/d.jpg"
+      When I run `bulkrename photos jpeg jpg --askoverwrite` interactively
+      And I type "yes"
+      Then the following files should exist:
+        | photos/d.jpg |
+      And the output should contain:
+      """
+      File 'photos/d.jpg' already exists, do you want to overwrite it (y/n)?
+      """
+      And the output should contain:
+      """
+      Overwriting file 'photos/d.jpg'
+      """</code></pre>
+    
+  </div>
+</div>
+<aside class="notes">
+  <table>
+    <tr>
+      <td class="icon">
+        
+        <div class="title">Note</div>
+        
+      </td>
+      <td class="content">
+        
+        <div class="paragraph">
+    
+  <p>We&#8217;ve renamed the scenario to "Choose to overwrite an existing file,"
+added a new step that checks that the file has in fact been overwritten
+(i.e. only photos/d.jpg should exist), and another new step that checks
+for a helpful message to be displayed in the output indicating that the
+existing file has been overwritten. Notice that since we need to ask the
+user something, we have specified <em>interactively</em> for Aruba in the step
+that runs <code>bulkrename.</code> We have also added another Aruba-based step to
+enter in the correct response to the question the script will ask. Now
+we have the complete scenario that we hoped for all along, but were
+unsure exactly what it needed to be when we started it.</p>
+</div>
+
+      </td>
+    </tr>
+  </table>
+</aside>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_incomplete">Incomplete!?!?</h3>
+  
+
+  
+<div class="ulist source incremental">
+  
+  <ul>
+  
+    <li class=fragment>
+      <p><em>Don&#8217;t worry if the only step you can think to write and implement feels
+incomplete</em></p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>You can always refactor it or extend it once you get it working.</p>
+      
+    </li>
+  
+  </ul>
+</div>
+<aside class="notes">
+  <table>
+    <tr>
+      <td class="icon">
+        
+        <div class="title">Note</div>
+        
+      </td>
+      <td class="content">
+        
+        <div class="paragraph">
+    
+  <p>Making each new scenario zoom in on a clear, specific goal equips you to move
+forward gradually and methodically, but with confidence.</p>
+</div>
+
+      </td>
+    </tr>
+  </table>
+</aside>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_goal_driven_approach">Goal-Driven Approach</h3>
+  
+
+  
+<div class="ulist source incremental">
+  
+  <ul>
+  
+    <li class=fragment>
+      <p><strong>Narrows the implementation focus</strong> for each scenario to accomplishing one
+distinct, well-defined goal.</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p><strong>Helps us deal with uncertainty</strong>, where perhaps we can&#8217;t see a clear way forward, but can at least see the next step.</p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_goal_driven_approach_2">Goal-Driven Approach</h3>
+  
+
+  
+<div class="ulist source">
+  
+  <ul>
+  
+    <li >
+      <p>Constraining and then subsequently refactoring scenarios in this way:</p>
+      
+<div class="ulist source incremental">
+  
+  <ul>
+  
+    <li class=fragment>
+      <p>Gives us the <strong>courage to proceed when the final solution seems vague</strong> and perhaps even in
+doubt</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p><strong>Minimizes the time spent with broken tests</strong></p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Helps us to <strong>go faster overall</strong></p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Guides us towards a <strong>right solution</strong></p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+  
+</section>
+
+
+<section>
+   <section>
+  
+  <h2 id="_make_it_pass_2">Make it Pass</h2>
+  
+   </section>
+  
+
+<section>
+
+  
+  <h3 id="_and_refactor">And Refactor&#8230;</h3>
+  
+
+  
+<div class="ulist source incremental">
+  
+  <ul>
+  
+    <li class=fragment>
+      <p>Extract out some new well-named methods and variables</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Use File.Join to build the file names instead of conventional string operations</p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_final_code">Final Code</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>#!/usr/bin/env ruby
+$: &lt;&lt; File.expand_path("../lib/", __FILE__)
+
+def do_overwrite(ask_overwrite, new_name)
+  overwrite = false
+  if ask_overwrite
+    print "File '#{new_name}' already exists, do you want to overwrite it (y/n)?"
+    input = STDIN.gets.strip
+    overwrite = true if input[0].downcase == 'y'
+  end
+
+  puts "Overwriting file '#{new_name}'" if overwrite == true
+  overwrite
+end
+
+def do_rename(ask_overwrite, new_name)
+  return true if not File.exists?(new_name)
+  return true if File.exists?(new_name) &amp;&amp; do_overwrite(ask_overwrite, new_name)
+end
+
+if ARGV.size == 0
+  puts 'USAGE: bulkrename &lt;folder name&gt; &lt;find extension&gt; &lt;replace extension&gt;'
+  exit 0
+end</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_continued">Continued&#8230;</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>folder = ARGV[0]
+find_type = ARGV[1]
+replace_type = ARGV[2]
+
+if ARGV[3]
+  ask_overwrite = ARGV[3] == "--askoverwrite"
+end
+
+Dir.foreach(folder) do |file_name|
+  type = File.extname(file_name).gsub(/^\./, '')
+  if type.downcase == find_type.downcase
+    old_name = File.join(folder, file_name)
+    new_name = File.join(folder, File.basename(file_name, ".#{type}") + ".#{replace_type}")
+    if do_rename(ask_overwrite, new_name)
+      File.rename(old_name, new_name)
+    end
+  end
+end</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_when_not_overwriting">When Not Overwriting&#8230;</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>  Scenario: Choose not to overwrite an existing file
+    Given an empty file named "photos/d.jpeg"
+    And an empty file named "photos/d.jpg"
+    When I run `bulkrename photos jpeg jpg --askoverwrite` interactively
+    And I type "no"
+    Then the following files should exist:
+      | photos/d.jpeg |
+      | photos/d.jpg  |
+    And the output should contain:
+    """
+    File 'photos/d.jpg' already exists, do you want to overwrite it (y/n)?
+    """
+    But the output should not contain:
+    """
+    Overwriting file 'photos/d.jpg'
+    """</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+  
+</section>
+
+
+<section>
+
+  
+  <h2 id="_done_for_now">Done! (for now)</h2>
+  
+
+  
+<div class="ulist source incremental">
+  
+  <ul>
+  
+    <li class=fragment>
+      <p>Nicely factored, easy-to-understand script</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Feature file that covers all the behavior we currently care about</p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+<section>
+   <section>
+  
+  <h2 id="_adding_your_own_steps">Adding Your Own Steps</h2>
+  
+   </section>
+  
+
+<section>
+
+  
+  <h3 id="_why_your_own">Why Your Own?</h3>
+  
+
+  
+<div class="paragraph">
+    
+  <p>Treat the steps included by Aruba as <em>examples</em> rather than templates.</p>
+</div>
+<aside class="notes">
+  <table>
+    <tr>
+      <td class="icon">
+        
+        <div class="title">Note</div>
+        
+      </td>
+      <td class="content">
+        
+        <div class="paragraph">
+    
+  <p>There are some improvements we can make to our feature file. Remember, we want
+to be refactoring our feature file, incorporating our learning and ubiquitous
+language. As we’ve already mentioned, we should endeavor to write scenarios
+centered around the goals that we want to accomplish and the immediate tasks
+that support those goals. We should avoid writing steps that are too finely-
+grained because they concentrate on the actions that are required to
+accomplish the tasks. For this reason you should regard</p>
+</div>
+<div class="paragraph">
+    
+  <p>The steps provided out-of-the-box by Aruba will help you get started, but if
+you only ever use the Aruba steps provided it is likely that you will end up
+writing Cucumber scenarios that look like a series of imperative actions,
+instead of capturing in the ubiquitous language what is important in terms of
+the user&#8217;s goals and the tasks required to accomplish these goals.</p>
+</div>
+
+      </td>
+    </tr>
+  </table>
+</aside>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_improve_the_language">Improve the Language</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>  @wip
+  Scenario: Default script output is correct
+    When I run `bulkrename`
+    Then the correct usage message should be displayed:
+    """
+    USAGE: bulkrename &lt;folder name&gt; &lt;find extension&gt; &lt;replace extension&gt; [--askoverwrite]
+    """</code></pre>
+    
+  </div>
+</div>
+<div class="paragraph">
+    
+  <p>Check for the correct <em>usage message</em>, rather than just looking for
+certain text.</p>
+</div>
+<aside class="notes">
+  <table>
+    <tr>
+      <td class="icon">
+        
+        <div class="title">Note</div>
+        
+      </td>
+      <td class="content">
+        
+        <div class="paragraph">
+    
+  <p>This updated scenario includes the new switch, but also now describes
+more clearly the task that is important to accomplish the goal.</p>
+</div>
+
+      </td>
+    </tr>
+  </table>
+</aside>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_our_own_aruba_step_definiton">Our Own Aruba Step Definiton</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>Then /^the correct usage message should be displayed:$/ do |usage_message|
+  assert_partial_output(usage_message, all_output)
+  last_exit_status.should == 0
+end</code></pre>
+    
+  </div>
+</div>
+<div class="paragraph">
+    
+  <p>Create <code>bulkrename_steps.rb</code> in <code>feature/step_definitions</code></p>
+</div>
+
+  
+</section>
+
+
+  
+</section>
+
+
+<section>
+   <section>
+  
+  <h2 id="_what_about_collaborating">What About Collaborating?</h2>
+  
+   </section>
+  
+
+<section>
+
+  
+  <h3 id="_consulting_with_qa">Consulting with QA</h3>
+  
+
+  
+<div class="paragraph">
+    
+  <p>After discussing the script with the tester on our team, we identified other
+error scenarios which should also be handled in the same basic manner&#8230;</p>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_new_scenarios">New Scenarios</h3>
+  
+
+  
+<div class="ulist source incremental">
+  
+  <ul>
+  
+    <li class=fragment>
+      <p><code>&lt;find extension&gt;</code> is missing (eg. <code>bulkrename photos</code>)</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p><code>&lt;replace extension&gt;</code> is missing (eg. <code>bulkrename photos txt</code>)</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Optional argument/switch has incorrect format (eg.
+<code>bulkrename photos txt option</code>)</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Optional argument has correct format but is invalid (eg.
+<code>bulkrename photos txt —verbose</code>)</p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_see_a_pattern">See a Pattern?</h3>
+  
+
+  
+<div class="ulist source incremental">
+  
+  <ul>
+  
+    <li class=fragment>
+      <p>Many, many scenarios where only the arguments and error message change</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>In each case, the arguments and error message are changing together</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Can&#8217;t we write scenarios to avoid repetitious scenarios?</p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_scenario_outline">Scenario Outline</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>  @wip
+  Scenario Outline: Parameters should be present and valid
+    Given an empty file named "photos/doc1.txt"
+    When I run `bulkrename &lt;arguments&gt;`
+    Then the program should exit by displaying the error:
+    """
+    Error: &lt;message&gt;
+    """
+
+  Examples:
+    | arguments                            | message                           |
+    | photos jpeg jpg --askoverwrite extra | Too many arguments                |
+    | documents txt md                     | Folder 'documents' does not exist |</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_adding_more_examples_is_easy_now">Adding More Examples is Easy Now</h3>
+  
+
+  
+<aside class="notes">
+  <table>
+    <tr>
+      <td class="icon">
+        
+        <div class="title">Note</div>
+        
+      </td>
+      <td class="content">
+        
+        <div class="paragraph">
+    
+  <p>Though we would typically do
+each of these one at a time, specifying and then implementing, the
+complete scenario would look as follows</p>
+</div>
+
+      </td>
+    </tr>
+  </table>
+</aside>
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>  @wip
+  Scenario Outline: Parameters should be present and valid
+    Given an empty file named "photos/doc1.txt"
+    When I run `bulkrename &lt;arguments&gt;`
+    Then the program should exit by displaying the error:
+    """
+    Error: &lt;message&gt;
+    """</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_adding_more_examples_is_easy_now_continued">Adding More Examples is Easy Now (Continued)</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>  Examples:
+    | arguments                            | message                           |
+    | photos jpeg jpg --askoverwrite extra | Too many arguments                |
+    | documents txt md                     | Folder 'documents' does not exist |
+    | photos                               | &lt;find extension&gt; is required      |
+    | photos txt                           | &lt;replace extension&gt; is required   |
+    | photos txt md extra                  | Invalid option format 'extra'     |
+    | photos jpeg jpg --verbose            | Invalid option name '--verbose'   |
+</code></pre>
+    
+  </div>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_argument_processing_code">Argument Processing Code</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>if ARGV.size == 0
+  puts 'USAGE: bulkrename &lt;folder name&gt; &lt;find extension&gt; &lt;replace extension&gt; [--askoverwrite]'
+  exit 0
+end
+abort 'Error: Too many arguments' if ARGV.size &gt; 4
+abort("Error: &lt;find extension&gt; is required") if ARGV.size == 1
+abort("Error: &lt;replace extension&gt; is required") if ARGV.size == 2
+
+folder = ARGV[0]
+find_type = ARGV[1]
+replace_type = ARGV[2]
+
+if ARGV[3]
+  abort "Error: Invalid option format '#{ARGV[3]}'" unless ARGV[3][0..1] == "--"
+  ask_overwrite = ARGV[3] == "--askoverwrite"
+  abort "Error: Invalid option name '#{ARGV[3]}'" unless ask_overwrite
+end
+
+abort("Error: Folder '#{folder}' does not exist") unless File.exists?(folder)</code></pre>
+    
+  </div>
+</div>
+<aside class="notes">
+  <table>
+    <tr>
+      <td class="icon">
+        
+        <div class="title">Note</div>
+        
+      </td>
+      <td class="content">
+        
+        <div class="paragraph">
+    
+  <p>Future error conditions that need to be handled can simply be added to
+this existing scenario outline without any further effort.</p>
+</div>
+<div class="paragraph">
+    
+  <p>Notice that we did not add a scenario outline until it was clear that
+it would be helpful. When you find a scenario repeated a couple of times
+then refactor it to a scenario outline, but only when it becomes clear
+you need to deal with three or more similar cases. Try to avoid the
+tendency to assume from the outset that a scenario outline is what will
+be needed</p>
+</div>
+
+      </td>
+    </tr>
+  </table>
+</aside>
+
+  
+</section>
+
+
+  
+</section>
+
+
+<section>
+
+  
+  <h2 id="_conclusion">Conclusion</h2>
+  
+
+  
+<div class="ulist source incremental">
+  
+  <ul>
+  
+    <li class=fragment>
+      <p>Crafting our steps in this way allows us to focus on the important
+details and abstract away the inconsequential ones</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>It can be a delicate balance to know how much detail to put in a scenario step
+versus what goes into the step definition</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>With collaborative practice and refactoring your scenarios as you learn more about
+the business domain a good balance can be achieved.</p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+<section>
+   <section>
+  
+  <h2 id="_resources">Resources</h2>
+  
+   </section>
+  
+
+<section>
+
+  
+  <h3 id="_one_book_three_classes">One Book, Three Classes</h3>
+  
+
+  
+<div class="ulist source">
+  
+  <ul>
+  
+    <li >
+      <p><em>BDD with Cucumber</em>, published by Addison Wesley</p>
+      
+<div class="ulist source">
+  
+  <ul>
+  
+    <li >
+      <p>Coming Soon! Early Access available this month.</p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+      
+    </li>
+  
+    <li >
+      <p><strong>Ignite BDD</strong> - One-Day Class</p>
+      
+    </li>
+  
+    <li >
+      <p><strong>BDD Fuel</strong> - 2 Hour Workshop</p>
+      
+    </li>
+  
+    <li >
+      <p><strong>BDD Blaze</strong> - 2.5-Day Workshop</p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="__strong_em_bdd_with_cucumber_em_strong"><strong><em>BDD with Cucumber</em></strong></h3>
+  
+
+  
+<div class="ulist source incremental">
+  
+  <ul>
+  
+    <li class=fragment>
+      <p>My <strong>new book for coders and testers</strong></p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Covers Cucumber in Ruby, Java and .NET</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Coming soon, from Addison Wesley</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p><em>Sign up for Early Access review</em></p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="__strong_ignite_bdd_strong_one_day_class"><strong>Ignite BDD</strong> - One-Day Class</h3>
+  
+
+  
+<div class="ulist source incremental">
+  
+  <ul>
+  
+    <li class=fragment>
+      <p>New to BDD and Cucumber?</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Get your whole team and management <strong>fired up about doing BDD</strong></p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p><em>Talk to me about scheduling one for your team</em></p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="__strong_bdd_fuel_strong_2_hour_workshop"><strong>BDD Fuel</strong> - 2 Hour Workshop</h3>
+  
+
+  
+<div class="ulist source incremental">
+  
+  <ul>
+  
+    <li class=fragment>
+      <p>Started using Cucumber and <strong>want to improve</strong>?</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>I&#8217;ll sit with your team, review your work, answer
+your questions and coach your team on doing BDD with Cucumber effectively</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p><em>Talk to me about scheduling one for your team</em></p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="__strong_bdd_blaze_strong_2_5_day_workshop"><strong>BDD Blaze</strong> - 2.5-Day Workshop</h3>
+  
+
+  
+<div class="ulist source incremental">
+  
+  <ul>
+  
+    <li class=fragment>
+      <p>Your team will take a <strong>huge step towards mastery of BDD</strong></p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p>Intensive training, coaching and leadership mentoring for your team in BDD with Cucumber</p>
+      
+    </li>
+  
+    <li class=fragment>
+      <p><em>Talk to me about scheduling one for your team</em></p>
+      
+    </li>
+  
+  </ul>
+</div>
+
+  
+</section>
+
+
+  
+</section>
+
+
+<section>
+
+  
+  
+
+  
+<div class="paragraph">
+    
+  <p><span class="image">
+  <img src="assets/images/vg_logo_square.png" alt="Company Logo">
+</span></p>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h2 id="_paul_rayner_2">Paul Rayner</h2>
+  
+
+  
+<div class="paragraph">
+    
+  <p>Twitter: <code>@thepaulrayner</code></p>
+</div>
+<div class="paragraph">
+    
+  <p>Email: <code>paul@virtual-genius.com</code></p>
+</div>
+<div class="paragraph">
+    
+  <p>Blog: <code>thepaulrayner.com</code></p>
+</div>
+
+  
+</section>
+
+
+
+<!--    <div id="footer">
+      <div id="footer-text">
+        
+        Last updated 2013-03-02 17:22:12 MST
+      </div>
+    </div>-->
+      <!-- RevealJS -->
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.min.js"></script>
+
+    <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+          // { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+        ]
+      });
+
+    </script>
+
+  </body>
+</html>
