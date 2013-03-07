@@ -48,7 +48,7 @@
 <div class="paragraph">
     
   <p><span class="image">
-  <img src="assets/images/iStock_000012998893Large.jpg" alt="Cucumber">
+  <img src="assets/images/cucumber.png" alt="Cucumber">
 </span></p>
 </div>
 
@@ -65,11 +65,7 @@
   
 <div class="paragraph">
     
-  <p>Twitter: @thepaulrayner</p>
-</div>
-<div class="paragraph">
-    
-  <p>Email: paul@virtualgenius.com</p>
+  <p>@thepaulrayner</p>
 </div>
 
   
@@ -506,7 +502,7 @@ renamed to:</p>
 <div class="paragraph">
     
   <p><span class="image">
-  <img src="assets/images/iStock_000012998893Large.jpg" alt="Cucumber">
+  <img src="assets/images/cucumber.png" alt="Cucumber">
 </span></p>
 </div>
 
@@ -2364,9 +2360,41 @@ the user&#8217;s goals and the tasks required to accomplish these goals.</p>
     <pre class="highlight"><code>  @wip
   Scenario: Default script output is correct
     When I run `bulkrename`
-    Then the correct usage message should be displayed:
+    Then the exit status should be 0
+    And the output should contain:
     """
-    USAGE: bulkrename &lt;folder name&gt; &lt;find extension&gt; &lt;replace extension&gt; [--askoverwrite]
+    USAGE: bulkrename &lt;folder name&gt; &lt;find extension&gt; &lt;replace extension&gt;
+    """</code></pre>
+    
+  </div>
+</div>
+<div class="paragraph">
+    
+  <p>Can this be improved?</p>
+</div>
+
+  
+</section>
+
+
+<section>
+
+  
+  <h3 id="_improve_the_language_2">Improve the Language</h3>
+  
+
+  
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>  @wip
+  Scenario: Default script output is correct
+    When I run `bulkrename`
+    Then the exit status should be 0
+    And the output should contain:
+    """
+    USAGE: bulkrename &lt;folder name&gt; &lt;find extension&gt; &lt;replace extension&gt;
     """</code></pre>
     
   </div>
@@ -2374,7 +2402,21 @@ the user&#8217;s goals and the tasks required to accomplish these goals.</p>
 <div class="paragraph">
     
   <p>Check for the correct <em>usage message</em>, rather than just looking for
-certain text.</p>
+certain text:</p>
+</div>
+<div class="listingblock">
+  
+  <div class="content monospaced">
+    
+    <pre class="highlight"><code>  @wip
+  Scenario: Default script output is correct
+    When I run `bulkrename`
+    Then the correct usage message should be displayed:
+    """
+    USAGE: bulkrename &lt;folder name&gt; &lt;find extension&gt; &lt;replace extension&gt; [--askoverwrite]
+    """</code></pre>
+    
+  </div>
 </div>
 <aside class="notes">
   <table>
@@ -2721,19 +2763,19 @@ be needed</p>
   <ul>
   
     <li class=fragment>
-      <p>Crafting our steps in this way allows us to focus on the important
-details and abstract away the inconsequential ones</p>
+      <p>Crafting our steps in this way allows us to <strong>focus on the important
+details</strong> and <strong>abstract away the inconsequential</strong> ones</p>
       
     </li>
   
     <li class=fragment>
-      <p>It can be a delicate balance to know how much detail to put in a scenario step
+      <p><strong>It takes practice</strong> to know how much detail to put in a scenario step
 versus what goes into the step definition</p>
       
     </li>
   
     <li class=fragment>
-      <p>With collaborative practice and refactoring your scenarios as you learn more about
+      <p>With <strong>collaborative practice</strong> and <strong>refactoring your scenarios</strong> as you learn more about
 the business domain a good balance can be achieved.</p>
       
     </li>
@@ -2966,21 +3008,14 @@ your questions and coach your team on doing BDD with Cucumber effectively</p>
 <section>
 
   
-  <h2 id="_paul_rayner_2">Paul Rayner</h2>
   
 
   
 <div class="paragraph">
     
-  <p>Twitter: <code>@thepaulrayner</code></p>
-</div>
-<div class="paragraph">
-    
-  <p>Email: <code>paul@virtual-genius.com</code></p>
-</div>
-<div class="paragraph">
-    
-  <p>Blog: <code>thepaulrayner.com</code></p>
+  <p><span class="image">
+  <img src="assets/images/business_card.png" alt="Business Card">
+</span></p>
 </div>
 
   
@@ -2991,7 +3026,7 @@ your questions and coach your team on doing BDD with Cucumber effectively</p>
 <!--    <div id="footer">
       <div id="footer-text">
         
-        Last updated 2013-03-02 17:22:12 MST
+        Last updated 2013-03-06 17:27:51 MST
       </div>
     </div>-->
       <!-- RevealJS -->
